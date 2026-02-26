@@ -1,0 +1,6 @@
+
+attacks:
+  military_attack:
+    tick_cost: 2
+  raid:
+    tick_cost: 2

@@ -1,0 +1,6 @@
+
+agents:
+  dev_agent:
+    role: implement
+  test_agent:
+    role: verify

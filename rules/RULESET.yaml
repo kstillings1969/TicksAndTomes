@@ -1,0 +1,8 @@
+
+version: v5
+progression:
+  model: experience
+  cap: 5
+removed:
+  ages: true
+  portals: true
