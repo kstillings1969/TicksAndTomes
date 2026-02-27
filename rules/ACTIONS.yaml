@@ -1,0 +1,18 @@
+actions:
+  explore:
+      tick_cost: 1
+      generate_land: true
+      land_per_tick: 50
+  meditate:
+      tick_cost: 1
+      generate_tomes: true
+      tomes_per_tick_multiplier: 1.2 * current_meditation_level * 0.1
+  drill:
+      tick_cost: 1
+      generate_troops: true
+      troops_per_tick_multiplier: 1.2 * current_drill_level * 0.1
+  farm:
+      tick_cost: 1
+      generate_food: true
+      food_per_tick_multiplier: 1.2 * current_farm_level * 0.1
+
