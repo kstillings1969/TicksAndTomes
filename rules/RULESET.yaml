@@ -1,8 +1,75 @@
 
-version: v5
+version: v1
 progression:
   model: experience
-  cap: 5
-removed:
-  ages: true
-  portals: true
+  cap: 10
+  levels:
+    - name: "Novice"
+      range: [0, 2)
+      description: "Just starting out. Focus on learning the basics and understanding the ruleset."
+    - name: "Apprentice"
+      range: [2, 5)
+      description: "Gaining experience. Can implement simple changes and understand more complex rules."
+    - name: "Adept"
+      range: [5, 8)
+      description: "Competent and reliable. Can handle most changes and understand intricate interactions."
+    - name: "Master"
+      range: [8, 10]
+      description: "Expert level. Can implement complex changes while maintaining system integrity and balance."
+action_progression:
+  experience_per_action:
+    meditate: 0.01
+    drill: 0.01
+    farm: 0.01
+    explore: 0.01
+  level_cap: 10
+  multiplier_per_level: 0.2  # e.g., +20% per level
+
+economy:
+  civilians:
+    cap_per_acre: 1000
+    base_generation_rate: "per acre per tick (see ENGINE_CONTRACT)"
+
+  taxation:
+    low_tax_threshold: 9          # Below 9%: +25% civilian gain speed
+    penalty_threshold: 23         # At/above 23%: -15% civilian gain speed (start)
+    exodus_threshold: 35          # At/above 35%: civilians start leaving
+    exodus_max_rate: 100          # At 100%: 7% of all civilians lost per tick
+    low_tax_bonus: 0.25           # +25% boost
+    high_tax_penalty_start: 0.15  # -15% penalty starts at 23%
+    high_tax_penalty_rate: "pro-rated from 23% to 35%"
+    exodus_rate_at_100: 0.07      # 7% loss per tick
+
+  buildings:
+    build_cost:
+      gold: 10
+      grain: 5
+    build_rate: 0.03              # 3% of total land can be built per tick
+    types:
+      farms:
+        production: 10             # grain per building per tick
+        production_modifier: "farm_level"
+      barracks:
+        production: 15             # troops per building per tick
+        production_modifier: "drill_level"
+      towers:
+        production: 100            # defense points per building
+        production_modifier: "none"
+      bazaars:
+        production: 25             # gold per building per tick
+        production_modifier: "tax_rate_based"
+      meditation_towers:
+        production: 15             # tomes per building per tick
+        production_modifier: "meditation_level"
+        tome_ratios:
+          optimal: 125             # tomes per tower (0% modifier)
+          bonus_threshold: 125     # above this: +15% bonus starts
+          bonus_cap: 175           # at this: +20% maximum bonus
+          bonus_per_extra_tome: 0.001  # 0.1% per tome above optimal
+          exodus_threshold: 175    # above this: 3% tome loss per tick
+          exodus_loss_rate: 0.03   # 3% of tomes lost per tick
+          spell_minimum_ratios:
+            spell_shield: 15
+            non_offensive: 20
+            intelligence: 30
+            magic_attack: 60
