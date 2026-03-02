@@ -77,6 +77,9 @@ Document-based database structure for storing player state across empires, wars,
       "explore": number
     },
 
+    // Morale system (affects attack strength)
+    "morale": number,          // 0-100 (affects attack strength multiplier)
+
     // Clan & combat
     "clan_id": "string | null",
     "last_attacked": "timestamp | null",

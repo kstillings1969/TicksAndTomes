@@ -25,6 +25,40 @@ action_progression:
   level_cap: 10
   multiplier_per_level: 0.2  # e.g., +20% per level
 
+morale:
+  starting_value: 100        # Starting morale percentage
+  max_value: 100
+  min_value: 0
+  offensive_action_cost: 1   # -1% morale per offensive action
+  non_offensive_action_gain: 1  # +1% morale per non-offensive action
+
+  offensive_actions:
+    - military_strike
+    - magic_attack
+    - any_pvp_damage_spell
+
+  non_offensive_actions:
+    - explore
+    - meditate
+    - drill           # Troop training, not attacking
+    - farm
+    - build
+    - any_economic_action
+
+  attack_strength_multiplier: "morale / 100"  # Morale as % affects damage output
+
+spells:
+  love:
+    icon: "spell_love"
+    type: "morale"
+    offensive: false
+    tick_cost: 2
+    morale_increase:
+      min: 4
+      max: 10
+      note: "Plus 2 from tick cost itself, total min 6"
+    tome_requirement: 20      # Minimum ratio of 20:1 tomes:towers
+
 economy:
   civilians:
     cap_per_acre: 1000

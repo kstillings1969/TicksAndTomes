@@ -16,3 +16,13 @@ actions:
       generate_food: true
       food_per_tick_multiplier: 1.2 * current_farm_level * 0.1
 
+spells:
+  love:
+      type: morale_boost
+      tick_cost: 2
+      morale_increase_base: random(4, 10)
+      morale_increase_from_ticks: 2
+      total_morale_increase: morale_increase_base + morale_increase_from_ticks
+      tome_requirement_ratio: 20  # Minimum 20 tomes per meditation tower
+      effect: "Restore morale, increasing confidence and combat effectiveness"
+

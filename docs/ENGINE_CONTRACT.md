@@ -143,3 +143,95 @@ if current_tomes < required_tomes:
 ## Spell Shield
 If active: spell_effect *= mitigation_factor (0.33)
 Applies to spell effects only.
+
+## Morale System
+
+Morale tracks empire psychological state and affects combat effectiveness.
+
+### Morale Basics
+- **Range**: 0-100 (percentage)
+- **Starting value**: 100
+- **Multiplier on attacks**: `attack_strength = base_damage * (morale / 100)`
+
+### Morale Changes
+
+**Offensive actions** (cost 1% morale each):
+- Military strike
+- Magic attack spells
+- Any spell dealing damage to other players
+
+Example: After 5 attacks, morale = 95% (loses 5%)
+
+**Non-offensive actions** (gain 1% morale each, capped at 100):
+- Explore
+- Meditate
+- Drill (training troops)
+- Farm
+- Build structures
+- Economic actions
+
+Example: After 3 non-offensive actions with 85% morale → morale = 88%
+
+### Morale Formula
+
+```
+if action is offensive:
+  new_morale = max(0, current_morale - 1)
+
+if action is non_offensive:
+  new_morale = min(100, current_morale + 1)
+```
+
+### Attack Strength Multiplier
+
+```
+damage_output = base_damage * (current_morale / 100)
+
+Examples:
+- 100% morale = 100% damage
+- 90% morale = 90% damage
+- 50% morale = 50% damage
+- 0% morale = 0% damage (cannot attack)
+```
+
+---
+
+## Love Spell
+
+A restorative morale spell that requires meditation.
+
+### Requirements
+- **Tick cost**: 2 ticks
+- **Tome requirement**: 20:1 ratio (20 tomes per meditation tower minimum)
+- **Cannot be used in combat** (it's non-offensive)
+
+### Morale Restoration
+
+Morale increases from two sources:
+
+1. **Tick cost itself** (non-offensive action): +2% morale
+2. **Love spell effect**: +4 to +10 morale points (randomized)
+
+**Total morale gain**: 6 to 12 points
+
+```
+love_spell_bonus = random(4, 10)  // Variable effect
+tick_bonus = 2                     // From 2 ticks spent
+total_morale_gain = love_spell_bonus + tick_bonus
+
+Formula:
+new_morale = min(100, current_morale + total_morale_gain)
+
+Examples:
+- At 85% morale, love spell bonus = 5 → new morale = min(100, 85 + 2 + 5) = 92%
+- At 95% morale, love spell bonus = 8 → new morale = min(100, 95 + 2 + 8) = 100% (capped)
+- At 88% morale, love spell bonus = 4 → new morale = min(100, 88 + 2 + 4) = 94%
+```
+
+### Balance Notes
+
+- Love spell is the primary way to recover morale when heavily damaged by combat
+- Players must choose between aggressive warfare (morale decay) and morale recovery (2 ticks cost)
+- Non-offensive actions naturally rebuild morale at 1% per action
+- Love spell is valuable for players planning extended PvP campaigns
+
