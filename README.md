@@ -230,10 +230,11 @@ make docker-up
 ## Learning Resources
 
 1. **New to the project?** → Start with [SETUP.md](SETUP.md)
-2. **Understanding game rules?** → Read [ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md)
+2. **Understand game rules?** → Read [ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md)
 3. **Working on UI?** → See [COMPONENT_STRUCTURE.md](docs/COMPONENT_STRUCTURE.md)
 4. **Contributing code?** → Follow [DEVELOPMENT_STANDARDS.md](docs/DEVELOPMENT_STANDARDS.md)
 5. **Agentic development?** → See [AGENTIC_WORKFLOW.yaml](workflows/AGENTIC_WORKFLOW.yaml)
+6. **On a sprint?** → Check [SPRINT_QUICK_REF.md](SPRINT_QUICK_REF.md) & [SPRINT_PLAN.md](SPRINT_PLAN.md)
 
 ## Current Phase
 
@@ -242,6 +243,8 @@ make docker-up
 - Resource generation & management
 - Skill progression with streaks
 - Basic combat (morale system)
+
+**Sprints**: See [SPRINT_PLAN.md](SPRINT_PLAN.md) for detailed 8-week roadmap with deliverables
 
 **Phase 2** (planned): PvP + Market
 **Phase 3** (planned): Clans + Chat
