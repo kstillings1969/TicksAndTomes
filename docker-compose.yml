@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: ticks-and-tomes-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      MONGO_INITDB_DATABASE: ticks_and_tomes
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./backend/scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - ticks-and-tomes
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ticks-and-tomes-backend
+    environment:
+      BACKEND_PORT: 8080
+      BACKEND_ENV: development
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_NAME: ticks_and_tomes
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      JWT_SECRET: dev-secret-key-do-not-use-in-production
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - ticks-and-tomes
+    volumes:
+      - ./backend:/app
+    command: go run ./cmd/server/main.go
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ticks-and-tomes-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:8080/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ticks-and-tomes
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  mongo_data:
+
+networks:
+  ticks-and-tomes:
+    driver: bridge

@@ -1,0 +1,6 @@
+backend/vendor/
+backend/.env
+backend/.env.local
+backend/*.exe
+backend/*.test
+backend/dist/
