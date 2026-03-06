@@ -18,6 +18,35 @@ Document-based database structure for storing player state across empires, wars,
     "resource_destroyed": number
   },
 
+  // Skill progression (ACCOUNT-LEVEL: persists across empire deaths)
+  // Decision: Skills carry over to new empires (see DECISIONS_RESOLVED.md)
+  "action_progression": {
+    "meditate": {
+      "level": number,           // 0-10 (hard cap)
+      "experience": number,      // 0.0-1.0 (progress to next level)
+      "streak_count": number,    // Consecutive actions (for streak decay)
+      "last_action_timestamp": number
+    },
+    "drill": {
+      "level": number,
+      "experience": number,
+      "streak_count": number,
+      "last_action_timestamp": number
+    },
+    "farm": {
+      "level": number,
+      "experience": number,
+      "streak_count": number,
+      "last_action_timestamp": number
+    },
+    "explore": {
+      "level": number,
+      "experience": number,
+      "streak_count": number,
+      "last_action_timestamp": number
+    }
+  },
+
   // Current empire (resets on death at 0 land)
   "empire": {
     "name": "string",
@@ -30,34 +59,11 @@ Document-based database structure for storing player state across empires, wars,
       "tomes": number,
       "troops": number,
       "food": number,
-      "ticks": number,
-      "civilians": number,       // Auto-generated from land (capped at land * 1000)
-      "gold": number,            // Generated from tax_rate * civilians
-      "tax_rate": number         // 0-100 (affects civilian generation speed)
-    },
-
-    // Action progression
-    "action_progression": {
-      "meditate": {
-        "level": number,        // 0-10
-        "experience": number,   // 0.0-1.0 (progress to next level)
-        "last_action_timestamp": number
-      },
-      "drill": {
-        "level": number,
-        "experience": number,
-        "last_action_timestamp": number
-      },
-      "farm": {
-        "level": number,
-        "experience": number,
-        "last_action_timestamp": number
-      },
-      "explore": {
-        "level": number,
-        "experience": number,
-        "last_action_timestamp": number
-      }
+      "ticks": number,          // 0-500 (active ticks)
+      "tick_box": number,       // 0-200 (stored ticks for overflow)
+      "civilians": number,      // Auto-generated from land (capped at land * 1000)
+      "gold": number,           // Generated from tax_rate * civilians
+      "tax_rate": number        // 0-100 (affects civilian generation speed)
     },
 
     // Buildings
@@ -69,16 +75,14 @@ Document-based database structure for storing player state across empires, wars,
       "meditation_towers": number
     },
 
-    // Streak tracking (for decay calculation per copilot-instructions)
-    "streaks": {
-      "meditate": number,
-      "drill": number,
-      "farm": number,
-      "explore": number
-    },
-
     // Morale system (affects attack strength)
     "morale": number,          // 0-100 (affects attack strength multiplier)
+
+    // Spell states
+    "spells": {
+      "shield_active": boolean,    // Is Spell Shield active?
+      "shield_active_until": "timestamp | null"
+    },
 
     // Clan & combat
     "clan_id": "string | null",
@@ -133,21 +137,14 @@ For efficient querying:
 ### Death (Land = 0)
 - Triggered when `empire.resources.land` reaches 0 (via coordinated attacks)
 - `empire.status = "dead"`
-- Resources remain at 0
-- Action levels & experience: **[DECISION PENDING]** — persist or reset?
+- Resources reset to 0
+- **Action levels PERSIST** on account (see [DECISIONS_RESOLVED.md](DECISIONS_RESOLVED.md))
 - Account `stars` remain (purchasable currency)
 
 ### Restart
 - Player can create new empire with fresh `empire` object
 - New `empire.name` can be set
 - Account `stars` available for purchases
-- Previous action levels: **[DEPENDS ON ABOVE DECISION]**
-
-## Empire Death Decision Point
-
-**Question: Should action progression persist across empire deaths?**
-
-- **Option A: Reset on death** — Each new empire starts fresh at level 0. Encourages replayability, but resets skill progression.
-- **Option B: Persist across empires** — Keep action levels on account. Makes returning players powerful faster, but may reduce difficulty curve for experienced players restarting.
-
-This affects balancing significantly and should be decided before implementation.
+- **Action progression carries over** — Skills 0-10 maintained at account level
+- New empire has 0 resources but same skill levels as old empire
+- Encourages players to restart and experience new strategies
